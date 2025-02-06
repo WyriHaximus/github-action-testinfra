@@ -1,0 +1,43 @@
+name: ''
+description: 'Get the OCI Platforms for a given OCI Image or Dockerfile'
+branding:
+  icon: 'server'
+  color: 'purple'
+inputs:
+  image:
+    description: The Docker image to test
+    required: true
+  testsPath:
+    description: The path that contains the Infra tests
+    required: false
+    default: 'test'
+  cmd:
+    description: Command to run on container start
+    required: false
+    default: ''
+  flags:
+    description: Additional flags to pass to docker run aside --r, -t, and -d
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout 🐙
+      uses: actions/checkout@v4
+      with:
+        repository: 'WyriHaximus/github-action-testinfra'
+        ref: 'initial-set-up'
+        path: .wyrihaximus-test-infra-action
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          test.sh
+    - name: Checkout 🛒
+      uses: actions/checkout@v4
+      with:
+        path: .wyrihaximus-test-infra-tests
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          ${{ inputs.testsPath }}
+    - name: Run Infra Tests 🏗️
+      shell: bash
+      run: ./.wyrihaximus-test-infra-action/test.sh "${{ inputs.image }}" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}"
