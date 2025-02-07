@@ -1,0 +1,39 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  supported-platform-matrix:
+    name: Supported processor platforms
+    runs-on: ubuntu-latest
+    outputs:
+      platform: ${{ steps.supported-platform-matrix.outputs.platform }}
+    steps:
+      - id: supported-platform-matrix
+        name: Generate platform
+        uses: WyriHaximus/github-action-oci-image-supported-platforms@main
+        with:
+          image: ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
+  tests:
+    name: Tests on ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJson(needs.supported-platform-matrix.outputs.platform) }}
+    needs:
+      - supported-platform-matrix
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - uses: actions/checkout@v4
+      - name: Test OCI Image
+        id: platforms
+        uses: ./
+        with:
+          image: ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
+          testsPath: infra-tests
+          cmd: php
+          flags: --platform="${{ matrix.platform }}"
