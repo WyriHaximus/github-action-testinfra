@@ -17,12 +17,15 @@ jobs:
         with:
           image: ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
   tests:
-    name: Tests on ${{ matrix.platform }}
+    name: Test ${{ matrix.image }} on ${{ matrix.platform }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         platform: ${{ fromJson(needs.supported-platform-matrix.outputs.platform) }}
+        image:
+          - ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
+          - ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev,ghcr.io/WyriHaximusNet/php:8.3-nts-alpine-dev
     needs:
       - supported-platform-matrix
     steps:
@@ -33,7 +36,7 @@ jobs:
         id: platforms
         uses: ./
         with:
-          image: ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
+          image: ${{ matrix.image }}
           testsPath: infra-tests
           cmd: php
           flags: --platform="${{ matrix.platform }}"
