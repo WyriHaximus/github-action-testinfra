@@ -14,6 +14,7 @@ declare -r DOCKER_TAG="$1"
 declare -r TESTS_PATH="$2"
 declare -r DOCKER_CMD="$3"
 declare -r DOCKER_ADDITIONAL_FLAGS="$4"
+declare -r TEST_SUITE="$5"
 declare -r TEST_INFRA_DOCKER_IMAGE_VERSION="2025.02.06" # renovate.docker ghcr.io/wyrihaximusnet/testinfra
 
 printf "Starting a container for '%s'\\n" "$DOCKER_TAG"
@@ -34,4 +35,7 @@ docker run --rm -t \
     -v "$TESTS_PATH:/tests" \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     "ghcr.io/wyrihaximusnet/testinfra:$TEST_INFRA_DOCKER_IMAGE_VERSION" \
-    --verbose --hosts="docker://$DOCKER_CONTAINER"
+    -m "$TEST_SUITE" \
+    --disable-pytest-warnings  \
+    --verbose \
+    --hosts="docker://$DOCKER_CONTAINER"

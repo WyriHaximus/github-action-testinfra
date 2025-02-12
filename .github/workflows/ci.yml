@@ -17,7 +17,7 @@ jobs:
         with:
           image: ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
   tests:
-    name: Test ${{ matrix.image }} on ${{ matrix.platform }}
+    name: Test ${{ matrix.testSuite }} against ${{ matrix.image }} on ${{ matrix.platform }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -26,6 +26,10 @@ jobs:
         image:
           - ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev
           - ghcr.io/WyriHaximusNet/php:8.3-zts-alpine-dev,ghcr.io/WyriHaximusNet/php:8.3-nts-alpine-dev
+        testSuite:
+          - ""
+          - "bash and not php"
+          - "php and not bash"
     needs:
       - supported-platform-matrix
     steps:
@@ -40,3 +44,4 @@ jobs:
           testsPath: infra-tests
           cmd: php
           flags: --platform="${{ matrix.platform }}"
+          testSuite: ${{ matrix.testSuite }}
