@@ -16,7 +16,7 @@ inputs:
     required: false
     default: ''
   flags:
-    description: Additional flags to pass to docker run aside --r, -t, and -d
+    description: Additional flags to pass to docker run aside --rm, -t, and -d
     required: false
     default: ''
 runs:
@@ -26,7 +26,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: 'WyriHaximus/github-action-testinfra'
-        ref: 'initial-set-up'
+        ref: 'main'
         path: .wyrihaximus-test-infra-action
         sparse-checkout-cone-mode: false
         sparse-checkout: |
@@ -40,4 +40,4 @@ runs:
           ${{ inputs.testsPath }}
     - name: Run Infra Tests 🏗️
       shell: bash
-      run: ./.wyrihaximus-test-infra-action/test.sh "${{ inputs.image }}" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}"
+      run: echo "${{ inputs.image }}" | tr ',' '\n' | xargs -I % ./.wyrihaximus-test-infra-action/test.sh "%" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}"

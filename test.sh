@@ -18,7 +18,7 @@ declare -r TEST_INFRA_DOCKER_IMAGE_VERSION="2025.02.06" # renovate.docker ghcr.i
 
 printf "Starting a container for '%s'\\n" "$DOCKER_TAG"
 
-DOCKER_CONTAINER=$(docker run --rm -t -d $DOCKER_ADDITIONAL_FLAGS $(echo "$DOCKER_TAG" | tr '[:upper:]' '[:lower:]') "$DOCKER_CMD")
+DOCKER_CONTAINER=$(docker run --rm -q -t -d $DOCKER_ADDITIONAL_FLAGS $(echo "$DOCKER_TAG" | tr '[:upper:]' '[:lower:]') "$DOCKER_CMD")
 readonly DOCKER_CONTAINER
 
 # Let's register a trap function, if our tests fail, finish or the script gets
