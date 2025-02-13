@@ -19,6 +19,10 @@ inputs:
     description: Additional flags to pass to docker run aside --rm, -t, and -d
     required: false
     default: ''
+  testSuite:
+    description: Specify a specific test suite to run
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -26,7 +30,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: 'WyriHaximus/github-action-testinfra'
-        ref: 'main'
+        ref: 'add-test-suite-input'
         path: .wyrihaximus-test-infra-action
         sparse-checkout-cone-mode: false
         sparse-checkout: |
@@ -40,4 +44,4 @@ runs:
           ${{ inputs.testsPath }}
     - name: Run Infra Tests 🏗️
       shell: bash
-      run: echo "${{ inputs.image }}" | tr ',' '\n' | xargs -I % ./.wyrihaximus-test-infra-action/test.sh "%" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}"
+      run: echo "${{ inputs.image }}" | tr ',' '\n' | xargs -I % ./.wyrihaximus-test-infra-action/test.sh "%" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}" "${{ matrix.testSuite }}"
