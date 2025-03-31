@@ -30,7 +30,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: 'WyriHaximus/github-action-testinfra'
-        ref: 'add-test-suite-input'
+        ref: 'main'
         path: .wyrihaximus-test-infra-action
         sparse-checkout-cone-mode: false
         sparse-checkout: |
