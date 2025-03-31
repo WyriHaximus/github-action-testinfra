@@ -1,8 +1,8 @@
-name: ''
-description: 'Get the OCI Platforms for a given OCI Image or Dockerfile'
+name: 'TestInfra'
+description: 'GitHub Action running your TestInfra tests'
 branding:
-  icon: 'server'
-  color: 'purple'
+  icon: 'sliders'
+  color: 'orange'
 inputs:
   image:
     description: The Docker image to test
