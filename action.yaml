@@ -1,4 +1,4 @@
-name: 'TestInfra'
+name: 'TestInfra Action'
 description: 'GitHub Action running your TestInfra tests'
 branding:
   icon: 'sliders'
