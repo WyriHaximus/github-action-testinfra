@@ -102,7 +102,7 @@ jobs:
         run: |
           platform=${{ matrix.platform }}
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-      - uses: WyriHaximus/github-action-testinfra@main
+      - uses: WyriHaximus/github-action-testinfra@v1
         with:
           image: ${{ env.DOCKER_IMAGE }}:${{ env.PLATFORM_PAIR }}
           flags: --platform="${{ matrix.platform }}"
