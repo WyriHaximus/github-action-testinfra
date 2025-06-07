@@ -16,13 +16,17 @@ inputs:
     required: false
     default: ''
   flags:
-    description: Additional flags to pass to docker run aside --rm, -t, and -d
+    description: Additional flags to pass to docker run aside --rm, -t, -d, --junit-xml
     required: false
     default: ''
   testSuite:
     description: Specify a specific test suite to run
     required: false
     default: ''
+  junitPath:
+    description: Specify a specific test suite to run
+    required: false
+    default: '.wyrihaximus-test-infra-junit'
 runs:
   using: "composite"
   steps:
@@ -30,7 +34,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: 'WyriHaximus/github-action-testinfra'
-        ref: 'main'
+        ref: 'make-junit-xml-available'
         path: .wyrihaximus-test-infra-action
         sparse-checkout-cone-mode: false
         sparse-checkout: |
@@ -42,6 +46,9 @@ runs:
         sparse-checkout-cone-mode: false
         sparse-checkout: |
           ${{ inputs.testsPath }}
+    - name: Create jUnit Path 🛣️
+      run: mkdir "${{ inputs.junitPath }}" || true
+      shell: bash
     - name: Run Infra Tests 🏗️
       shell: bash
-      run: echo "${{ inputs.image }}" | tr ',' '\n' | xargs -I % ./.wyrihaximus-test-infra-action/test.sh "%" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}" "${{ matrix.testSuite }}"
+      run: echo "${{ inputs.image }}" | tr ',' '\n' | xargs -I % ./.wyrihaximus-test-infra-action/test.sh "%" "./.wyrihaximus-test-infra-tests/${{ inputs.testsPath }}" "${{ inputs.cmd }}" "${{ inputs.flags }}" "${{ inputs.junitPath }}" "${{ matrix.testSuite }}"
